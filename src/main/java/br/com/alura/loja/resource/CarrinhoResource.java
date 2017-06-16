@@ -10,9 +10,9 @@ import javax.ws.rs.core.MediaType;
 public class CarrinhoResource {
     @GET
     @Path("{id}")
-    @Produces(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_JSON)
     public String busca(@PathParam("id") long id) {
         Carrinho carrinho = new CarrinhoDAO().busca(id);
-        return carrinho.toXML();
+        return carrinho.toJSON();
     }
 }
