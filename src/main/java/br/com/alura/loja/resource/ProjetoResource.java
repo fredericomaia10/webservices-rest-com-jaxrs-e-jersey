@@ -13,9 +13,9 @@ import javax.ws.rs.core.MediaType;
 public class ProjetoResource {
     @GET
     @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_XML)
     public String busca(@PathParam("id") long id) {
         Projeto projeto = new ProjetoDAO().busca(id);
-        return projeto.toJSON();
+        return projeto.toXML();
     }
 }
