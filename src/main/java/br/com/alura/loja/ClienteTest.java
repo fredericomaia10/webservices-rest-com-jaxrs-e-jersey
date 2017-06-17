@@ -5,6 +5,8 @@ import br.com.alura.loja.modelo.Produto;
 import br.com.alura.loja.modelo.Projeto;
 import com.thoughtworks.xstream.XStream;
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.filter.LoggingFilter;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,10 +22,14 @@ import javax.ws.rs.core.Response;
 public class ClienteTest {
 
     private HttpServer httpServer;
+    private Client client;
 
     @Before
     public void inicializaServidor() {
         httpServer = Servidor.inicializaServidor();
+        ClientConfig clientConfig = new ClientConfig();
+        clientConfig.register(new LoggingFilter());
+        client = ClientBuilder.newClient(clientConfig);
     }
 
     @After
@@ -33,7 +39,6 @@ public class ClienteTest {
 
     @Test
     public void testaQueBuscarUmCarrinhoTrazOCarrinhoEsperado() {
-        Client client = ClientBuilder.newClient();
         WebTarget target = client.target("http://localhost:8080");
         String conteudo = target.path("/carrinhos/1").request().get(String.class);
         Carrinho carrinho = (Carrinho) new XStream().fromXML(conteudo);
@@ -42,7 +47,6 @@ public class ClienteTest {
 
     @Test
     public void testaQueInserirUmCarrinhoRetornaSucesso() {
-        Client client = ClientBuilder.newClient();
         WebTarget target = client.target("http://localhost:8080");
         Carrinho carrinho = new Carrinho();
         carrinho.adiciona(new Produto(314L, "Tablet", 999, 1));
@@ -56,7 +60,6 @@ public class ClienteTest {
 
     @Test
     public void testaQueBuscarUmProjetoTrazOEsperado() {
-        Client client = ClientBuilder.newClient();
         WebTarget target = client.target("http://localhost:8080");
         String conteudo = target.path("/projetos/1").request().get(String.class);
         Projeto projeto = (Projeto) new XStream().fromXML(conteudo);
